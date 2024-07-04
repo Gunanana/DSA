@@ -1,35 +1,30 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void merger(vector<int> &vec, int s, int e){
-    int mid = s + (e-s)/2;
-    int ls = mid-s+1;
-    int rs = e-mid;
+void merger(vector<int> &vec, int low, int high){
+    int size = high - low + 1;
+    int mid = low + (high - low)/2;
+    vector<int> temp(size);
 
-    vector<int> rvec(rs), lvec(ls);
-
-    int index = 0;
-    for(int i=s; i<=mid; ++i) lvec[index++] = vec[i];
-    index = 0;
-    for(int i= mid+1; i<=e; ++i) rvec[index++] = vec[i];
-
-    int ri = 0, li = 0;
-    int k = s;
-    while(ri<rs && li<ls){
-        if(lvec[li] < rvec[ri]) vec[k++] = lvec[li++];
-        else vec[k++] = rvec[ri++];
-
+    int i = low, j = mid+1, k = 0;
+    while(i<=mid && j<=high){
+        if(vec[i] < vec[j]) temp[k++] = vec[i++];
+        else temp[k++] = vec[j++];
     }
-    while(li < ls) vec[k++] = lvec[li++];
-    while(ri < rs) vec[k++] = rvec[ri++];
+    while(i<=mid) temp[k++] = vec[i++];
+    while(j<=high) temp[k++] = vec[j++];
+
+    k=0;
+    for(int i=low; i<=high; ++i) vec[i] = temp[k++];
 }
 
-void mergeSort(vector<int> &vec, int s, int e){
-    if(s>=e) return;
-    int mid = s+ (e-s)/2;
-    mergeSort(vec, s, mid);
-    mergeSort(vec, mid+1, e);
-    merger(vec, s, e);
+
+void mergeSort(vector<int> &vec, int low, int high){
+    if(low>=high) return;
+    int mid = low + (high - low)/2;
+    mergeSort(vec, low, mid);
+    mergeSort(vec, mid+1, high);
+    merger(vec, low, high);
 }
 
 int main(){
